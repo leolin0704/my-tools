@@ -32,12 +32,14 @@ const replace = (content) => {
     return content.replace(/^/, '// ')
 }
 
+const rename = (fileName) => fileName + '1'
+
 function process() {
     walk(REPO, filter , (err, files) => {
         files.forEach((file) => {
             fs.readFile(file, 'utf-8')
-            .then(content => replace(content))
-            .then(replacedContent => fs.writeFile(file, replacedContent))
+            .then(content => fs.writeFile(file, replace(content)))
+            .then(() => fs.rename(file, rename(file)))
             .catch(err => {
                 console.error(err)
             })
